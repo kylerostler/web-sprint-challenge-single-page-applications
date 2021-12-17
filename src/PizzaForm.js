@@ -76,15 +76,14 @@ export default function PizzaForm (props) {
                     <input id="special-text"
                         name="special"
                         type="text"
-                        placeholder="pizza here"
-                        maxLength="30"
+                        placeholder="special instructions"
                         onChange={onChange}
                         value={values.special}
                     />
                 </label>
             </div>
             <div>
-                <button>submit</button>
+                <button id="order-button">Add To Order</button>
             </div>
         </form>
     )

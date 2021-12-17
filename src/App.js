@@ -18,19 +18,15 @@ const initialFormValues = {
   size: '',
 }
 
+const initialPizzas = [];
+
 const App = () => {
-  const [pizzas, setPizzas] = useState([]);
+  const [pizzas, setPizzas] = useState(initialPizzas);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setError] = useState('');
 
 
-  // const getPizzaOrders = () => {
-  //   axios.get(`https://reqres.in/api/orders`)
-  //   .then(resp => {
-  //     console.log(resp.data.data);
-  //     setPizzas(resp.data.data)
-  //   }).catch(err => console.error(err))
-  // }
+  
 
   const validate = (name, value) => {
     yup.reach(schema, name)
@@ -47,7 +43,8 @@ const App = () => {
   const postNewPizza = newPizza => {
     axios.post(`https://reqres.in/api/orders`, newPizza)
     .then(resp => {
-      setPizzas([ resp.data, ...pizzas])
+      setPizzas([resp.data, ...pizzas])
+      console.log(resp.data)
     }).catch(err => console.error(err))
     .finally(() => setFormValues(initialFormValues))
   }
@@ -56,19 +53,16 @@ const App = () => {
       const newPizza = {
         name_input: formValues.name_input.trim(),
         size: formValues.size,
-        toppings: ['pepperoni', 'pineapple', 'mushrooms', 'sausage'].filter(topping => !!formValues[topping]),
+        // toppings: ['pepperoni', 'pineapple', 'mushrooms', 'sausage'].filter(topping => !!formValues[topping]),
+        pepperoni: formValues.pepperoni,
+        pineapple: formValues.pineapple,
+        mushrooms: formValues.mushrooms,
+        sausage: formValues.sausage,
         special: formValues.special
       }
-      if(!newPizza.name_input || !newPizza.size) {
-        setError('PIZZA REQUIRED')
-      } else {
        postNewPizza(newPizza);
-      }
     }
-  
-  // useEffect(() => {
-  //   getPizzaOrders()
-  // }, [])
+
 
   return (
     <>
