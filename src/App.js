@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch } from 'react-router-dom';
 import * as yup from 'yup';
 
@@ -19,12 +19,13 @@ const initialFormValues = {
 }
 
 const initialPizzas = [];
+const initialDisabled = true;
 
 const App = () => {
   const [pizzas, setPizzas] = useState(initialPizzas);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setError] = useState('');
-
+  const [disabled, setDisabled] = useState(initialDisabled);
 
   
 
@@ -63,6 +64,9 @@ const App = () => {
        postNewPizza(newPizza);
     }
 
+    useEffect(() => {
+      schema.isValid(formValues).then(valid => setDisabled(!valid))
+    }, [formValues])
 
   return (
     <>
@@ -75,6 +79,7 @@ const App = () => {
           update={updateForm}
           submit={submitForm}
           errors={formErrors}
+          disabled={disabled}
            />
         </Route>
         
