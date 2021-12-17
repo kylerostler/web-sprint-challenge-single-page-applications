@@ -6,9 +6,16 @@ import PizzaMenu from './PizzaMenu';
 import PizzaForm from './PizzaForm'
 
 import schema from './PizzaFormSchema';
+import axios from "axios";
 
 const initialFormValues = {
   name_input: '',
+  special: '',
+  pepperoni: false,
+  pineapple: false,
+  mushrooms: false,
+  sausage:false,
+  size: '',
 }
 
 const App = () => {
@@ -16,6 +23,14 @@ const App = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setError] = useState('');
 
+
+  // const getPizzaOrders = () => {
+  //   axios.get(`https://reqres.in/api/orders`)
+  //   .then(resp => {
+  //     console.log(resp.data.data);
+  //     setPizzas(resp.data.data)
+  //   }).catch(err => console.error(err))
+  // }
 
   const validate = (name, value) => {
     yup.reach(schema, name)
@@ -29,19 +44,32 @@ const App = () => {
     setFormValues({ ...formValues, [inputName]: inputValue});
   }
 
+  const postNewPizza = newPizza => {
+    axios.post(`https://reqres.in/api/orders`, newPizza)
+    .then(resp => {
+      setPizzas([ resp.data, ...pizzas])
+    }).catch(err => console.error(err))
+    .finally(() => setFormValues(initialFormValues))
+  }
+
   const submitForm = () => {
       const newPizza = {
         name_input: formValues.name_input.trim(),
+        size: formValues.size,
+        toppings: ['pepperoni', 'pineapple', 'mushrooms', 'sausage'].filter(topping => !!formValues[topping]),
+        special: formValues.special
       }
-      if(!newPizza.name_input) {
+      if(!newPizza.name_input || !newPizza.size) {
         setError('PIZZA REQUIRED')
       } else {
-        setPizzas(pizzas.concat(newPizza));
-        setFormValues(initialFormValues);
-        setError('');
+       postNewPizza(newPizza);
       }
     }
   
+  // useEffect(() => {
+  //   getPizzaOrders()
+  // }, [])
+
   return (
     <>
       <h1>BloomTech Eats</h1>
