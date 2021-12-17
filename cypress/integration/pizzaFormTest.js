@@ -10,6 +10,7 @@ describe('Pizza Order Form', () => {
     const pineCheck = () => cy.get('input[name=pineapple]');
     const mushCheck = () => cy.get('input[name=mushrooms]');
     const sausageCheck = () => cy.get('input[name=sausage]');
+    const submitBtn = () => cy.get('button[id="order-button"]');
 
     it('sanity check', () => {
         expect(1 + 1).to.equal(2);
@@ -61,7 +62,20 @@ describe('Pizza Order Form', () => {
             .should('have.value', 'pep')
 
             sizeInput()
-            .
+            .select('Small')
+
+            mushCheck()
+            .should('not.be.checked')
+            .click()
+            .should('be.checked')
+
+            specialInput()
+            .should('have.value', '')
+            .type('porch')
+            .should('have.value', 'porch')
+
+            submitBtn()
+            .click()
         })
     })
 
